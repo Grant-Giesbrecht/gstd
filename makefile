@@ -1,5 +1,5 @@
 CC = clang++
 
 all: gstd.cpp
-	$(CC) -c gstd.cpp
+	$(CC) -o libgstd.a -c gstd.cpp
 
