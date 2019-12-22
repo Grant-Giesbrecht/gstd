@@ -3,6 +3,7 @@
 #include <regex>
 #include <sstream>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 namespace gstd {
@@ -184,6 +185,55 @@ void trim_whitespace(string& in){
 }
 
 /*
+ Looks for a string in 'in'. Starts the search at 'start' and saves the
+ first character after the found string in 'end'. The string it searches
+ for is defined by being enclosed in double quotes. Double quotes escaped
+ by a backslash will not mark the end of a string.
+ 
+ If no string is found, 'end' is set equal to zero.
+ */
+std::string get_string(std::string in, size_t& end, size_t start){
+    
+    end = 0;
+    
+    bool was_backslash = false;
+    bool in_string = false;
+    size_t start_char;
+    
+    //Set was_backslash correctly if 'start' is not zero
+    if (start != 0){
+        was_backslash = (in[start-1] == '\\');
+    }
+    
+    for (size_t i = start ; i < in.length() ; i++){ //Scan through each character...
+        
+        if (in[i] == '"'){
+            if (was_backslash){
+                //do nothing - escaped
+                was_backslash = false;
+            }else{
+                if (in_string){ //found end
+                    end = i+1; //Set end correctly
+                    std::cout << "here" << std::endl;
+                    std::cout << start << " " << end << std::endl;
+                    return in.substr(start_char, end-start_char-1); //Return interior
+                }else{ //found start
+                    in_string = true;
+                    start_char  = i+1; //Next char is where string inside begins
+                }
+            }
+        }else if (in[i] == '\\'){
+            was_backslash = !was_backslash; //two backslashes are a backslash char, not an escape char
+        }else if (was_backslash){
+            was_backslash = false;
+        }
+        
+    }
+    
+    return "";
+}
+
+/*
  Reads 'in' as a vector of doubles. Expects no leading or trailing square or
  curly brackets. Commas separate elements. Whitespace is tolerated. Any format
  accepted by stod() is accepted in this function.
@@ -199,7 +249,7 @@ std::vector<double> to_dvec(std::string in){
 
     std::vector<double> vec;
     
-    while(std::getline(input, element, ',')){
+    while(std::getline(input, element, ',')){ //break line at every comma
         
         //Remove extra whitespace
         trim_whitespace(element);
@@ -216,6 +266,22 @@ std::vector<std::vector<double> > to_dvec2D(std::string in){
 }
 
 std::vector<std::string> to_svec(std::string in){
+    
+//    std::stringstream input(in);
+//    std::string element;
+//
+//    std::vector<std::string> vec;
+//
+//    while(std::getline(input, element, ',')){ //break line at every comma
+//
+//        //Remove extra whitespace
+//        trim_whitespace(element);
+//
+//        vec.push_back(to_bool(element));
+//
+//    }
+//
+//    return vec;
     
 }
 
@@ -239,7 +305,7 @@ std::vector<bool> to_bvec(std::string in){
 
     std::vector<bool> vec;
     
-    while(std::getline(input, element, ',')){
+    while(std::getline(input, element, ',')){ //break line at every comma
         
         //Remove extra whitespace
         trim_whitespace(element);

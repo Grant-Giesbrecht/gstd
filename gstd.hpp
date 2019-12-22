@@ -26,6 +26,7 @@ std::vector<string_idx> parseIdx(std::string input, std::string delin);
 void ensure_whitespace(std::string& in, std::string targets);
 void trim_whitespace(std::string& in);
 
+std::string get_string(std::string in, size_t& end, size_t start=0);
 
 std::vector<double> to_dvec(std::string in);
 std::vector<std::vector<double> > to_dvec2D(std::string in);
