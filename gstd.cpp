@@ -315,6 +315,44 @@ std::vector<std::vector<double> > to_dvec2D(std::string in){
 	
 }
 
+
+std::vector<std::vector<std::string> > to_svec2D(std::string in){
+	std::vector<std::vector<std::string> > vec2d;
+    std::vector<std::string> vec;
+    
+    size_t end = 0;
+    size_t idx = 0;
+    std::string stemp;
+	
+    do{
+        stemp = gstd::get_string(in, idx, idx);
+        if (stemp != ""){
+            vec.push_back(stemp);
+        }
+		
+		//Check if linebreak (;) occurs before next string
+		size_t next_str = in.find("\"", idx);
+		size_t next_semi = in.find(";", idx);
+		if (next_semi != std::string::npos && next_str != std::string::npos){ //Make sure both are found, otherwise ignore
+			
+			if (next_semi < next_str){
+				vec2d.push_back(vec);
+				vec.clear();
+			}
+		}
+
+		
+    }while(idx < in.length());
+	
+	//Add last row
+	if (vec.size() > 0){
+		vec2d.push_back(vec);
+	}
+    
+    return vec2d;
+
+}
+
 /*
  Reads 'in' as a vector of strings. Expects no leading or trailing square or
  curly brackets. Commas separate elements. Whitespace is tolerated. Any format
@@ -329,8 +367,8 @@ std::vector<std::vector<double> > to_dvec2D(std::string in){
  is thrown.
  */
 std::vector<std::string> to_svec(std::string in){
-
-    std::vector<std::string> vec;
+    
+	std::vector<std::string> vec;
     
     size_t end = 0;
     size_t idx = 0;
@@ -344,11 +382,7 @@ std::vector<std::string> to_svec(std::string in){
     }while(idx < in.length());
     
     return vec;
-
-}
-
-std::vector<std::vector<std::string> > to_svec2D(std::string in){
-    
+	
 }
 
 /*
@@ -382,6 +416,22 @@ std::vector<bool> to_bvec(std::string in){
 
 std::vector<std::vector<bool> > to_bvec2D(std::string in){
     
+	std::stringstream input(in);
+    std::string element;
+
+    std::vector<std::vector<bool> > vec;
+    
+    while(std::getline(input, element, ';')){ //break line at every semicolon
+        
+        //Remove extra whitespace
+        trim_whitespace(element);
+        
+        vec.push_back(to_bvec(element));
+        
+    }
+    
+    return vec;
+	
 }
 
 /*
