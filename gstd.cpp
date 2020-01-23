@@ -51,11 +51,12 @@ string to_lower(std::string s){
  indicate a break between words. Deliniating characters are not included in words.
  
  input - string to parse
- delin - deliniating characters
+ delin - deliniating characters (these are deleted from the returned words)
+ keep_delin - characters that will always be recognized as words, will not be removed, and will always be lone
  
  Returns a vector of parsed strings
  */
-vector<string> parse(string input, string delin){
+vector<string> parse(string input, string delin, string keep_delin){
     
     vector<string> output;
     
@@ -71,6 +72,18 @@ vector<string> parse(string input, string delin){
             
             //Reset length counter
             len_counter = 0;
+            
+        }else if ((keep_delin.find(input[i]) != string::npos)){ //Keep-deliniator found
+        
+            //Add block to output
+            if (len_counter > 0){
+                output.push_back(input.substr(i-len_counter , len_counter));
+            }
+        
+            //Reset length counter
+            len_counter = 0;
+            
+            output.push_back(string(1, input[i]));
             
         }else if(i+1 == input.length()){ //Handle end conditions
             len_counter++;
@@ -97,9 +110,10 @@ vector<string> parse(string input, string delin){
  input - string to parse
  delin - deliniating characters
  
- Returns a vector of parsed strings
+ Returns a vector of parsed strings along with the index of the first character of the substring in
+ the original string.
  */
-vector<string_idx> parseIdx(string input, string delin){
+vector<string_idx> parseIdx(string input, string delin, string keep_delin){
     
     vector<string_idx> output;
     
@@ -113,13 +127,32 @@ vector<string_idx> parseIdx(string input, string delin){
                 
                 string_idx tempSI;
                 tempSI.str = input.substr(i-len_counter , len_counter);
-                tempSI.idx = i;
+                tempSI.idx = i-tempSI.str.length();
                 
                 output.push_back(tempSI);
             }
             
             //Reset length counter
             len_counter = 0;
+            
+        }else if ((keep_delin.find(input[i]) != string::npos)){ //Keep-deliniator found
+        
+            //Add block to output
+            if (len_counter > 0){
+                string_idx tempSI;
+                tempSI.str = input.substr(i-len_counter , len_counter);
+                tempSI.idx = i-tempSI.str.length();
+                output.push_back(tempSI);
+            }
+        
+            //Reset length counter
+            len_counter = 0;
+            
+            //Add keep-delin word
+            string_idx tempSI;
+            tempSI.str = input[i];
+            tempSI.idx = i;
+            output.push_back(tempSI);
             
         }else if(i+1 == input.length()){ //Handle end conditions
             len_counter++;
@@ -128,7 +161,7 @@ vector<string_idx> parseIdx(string input, string delin){
                 
                 string_idx tempSI;
                 tempSI.str = input.substr(i-len_counter+1 , len_counter);
-                tempSI.idx = i;
+                tempSI.idx = i-tempSI.str.length()+1;
                 
                 output.push_back(tempSI);
             }
@@ -214,8 +247,6 @@ std::string get_string(std::string in, size_t& end, size_t start){
             }else{
                 if (in_string){ //found end
                     end = i+1; //Set end correctly
-                    std::cout << "here" << std::endl;
-                    std::cout << start << " " << end << std::endl;
                     return in.substr(start_char, end-start_char-1); //Return interior
                 }else{ //found start
                     in_string = true;
@@ -265,24 +296,36 @@ std::vector<std::vector<double> > to_dvec2D(std::string in){
     
 }
 
+/*
+ Reads 'in' as a vector of strings. Expects no leading or trailing square or
+ curly brackets. Commas separate elements. Whitespace is tolerated. Any format
+ accepted by stod() is accepted in this function. Strings are surrounded by double
+ quotes. Double quotes can be contained in the detected string, they need to be
+ escpaed with a backslash.
+ 
+ TODO: Does not enforce 1.) requiring exactly 1 comma between strings 2.) extraneous characters outside of the strings
+ 
+ EXCEPTIONS:1
+ If 'in' can not be converted to a vector<double>, invalid_argument exception
+ is thrown.
+ */
 std::vector<std::string> to_svec(std::string in){
+
+    std::vector<std::string> vec;
     
-//    std::stringstream input(in);
-//    std::string element;
-//
-//    std::vector<std::string> vec;
-//
-//    while(std::getline(input, element, ',')){ //break line at every comma
-//
-//        //Remove extra whitespace
-//        trim_whitespace(element);
-//
-//        vec.push_back(to_bool(element));
-//
-//    }
-//
-//    return vec;
+    size_t end = 0;
+    size_t idx = 0;
+    std::string stemp;
     
+    do{
+        stemp = gstd::get_string(in, idx, idx);
+        if (stemp != ""){
+            vec.push_back(stemp);
+        }
+    }while(idx < in.length());
+    
+    return vec;
+
 }
 
 std::vector<std::vector<std::string> > to_svec2D(std::string in){

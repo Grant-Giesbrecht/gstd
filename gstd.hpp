@@ -20,8 +20,8 @@ bool to_bool(std::string bstr);
 std::string to_upper(std::string s);
 std::string to_lower(std::string s);
 
-std::vector<std::string> parse(std::string input, std::string delin);
-std::vector<string_idx> parseIdx(std::string input, std::string delin);
+std::vector<std::string> parse(std::string input, std::string delin, std::string keep_delin="");
+std::vector<string_idx> parseIdx(std::string input, std::string delin, std::string keep_delin="");
 
 void ensure_whitespace(std::string& in, std::string targets);
 void trim_whitespace(std::string& in);
