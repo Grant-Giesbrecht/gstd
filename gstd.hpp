@@ -35,6 +35,8 @@ std::vector<std::vector<std::string> > to_svec2D(std::string in);
 std::vector<bool> to_bvec(std::string in);
 std::vector<std::vector<bool> > to_bvec2D(std::string in);
 
+std::string to_gstring(double x, size_t buf_size=30, size_t precision=6);
+
 }
 
 #endif

@@ -292,8 +292,27 @@ std::vector<double> to_dvec(std::string in){
     return vec;
 }
 
+/*
+ 
+ */
 std::vector<std::vector<double> > to_dvec2D(std::string in){
+	
+	std::stringstream input(in);
+    std::string element;
+
+    std::vector<std::vector<double> > vec;
     
+    while(std::getline(input, element, ';')){ //break line at every semicolon
+        
+        //Remove extra whitespace
+        trim_whitespace(element);
+        
+        vec.push_back(to_dvec(element));
+        
+    }
+    
+    return vec;
+	
 }
 
 /*
@@ -365,7 +384,36 @@ std::vector<std::vector<bool> > to_bvec2D(std::string in){
     
 }
 
+/*
+Converts a double to a string using 'g' formatting.
 
+precision is the number of characters after the decimal in fprint strings. It
+specifies the max number of digits after the decimal. Recommended value = 6.
 
+buf_size is the size of the char buffer to use. Defaults to 30.
+
+Returns a string of the variable 'x'.
+*/
+std::string to_gstring(double x, size_t buf_size, size_t precision){
+
+	//Set upper limits on size
+	if (precision > 100){
+		precision = 100;
+	}
+	if (buf_size > 300){
+		buf_size = 300;
+	}
+
+	if (buf_size < 10){
+		buf_size = 10;
+	}
+
+	char buffer[buf_size];
+	std::string format = "%." + std::to_string(precision) + "G";
+
+	sprintf(buffer, format.c_str(), x);
+
+	return std::string(buffer);
 }
 
+}
