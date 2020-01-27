@@ -63,8 +63,8 @@ vector<string> parse(string input, string delin, string keep_delin, bool preserv
 	
 	vector<string_idx> output_idx = parseIdx(input, delin, keep_delin, preserve_strings);
 	
-	for (size_t i = 0 ; i < output_idx ; i++){
-		output.push_back(output_idx.str);
+	for (size_t i = 0 ; i < output_idx.size() ; i++){
+		output.push_back(output_idx[i].str);
 	}
 	
 	return output;
@@ -131,7 +131,7 @@ vector<string_idx> parseIdx(string input, string delin, string keep_delin, bool 
 		size_t delin_pos = delin.find(input[i]);
 		size_t kdelin_pos = keep_delin.find(input[i]);
 		
-        if ((delin != string::npos) && !skip_check){ //Deliniator found
+        if ((delin_pos != string::npos) && !skip_check){ //Deliniator found
             
             //Add block to output if section exists (not two deliniators in a row)
             if (len_counter > 0){
@@ -146,7 +146,7 @@ vector<string_idx> parseIdx(string input, string delin, string keep_delin, bool 
             //Reset length counter
             len_counter = 0;
             
-        }else if ((kdelin != string::npos) && !skip_check){ //Keep-deliniator found
+        }else if ((kdelin_pos != string::npos) && !skip_check){ //Keep-deliniator found
         
             //Add block to output
             if (len_counter > 0){
@@ -499,6 +499,7 @@ std::vector<size_t> all_occurances(std::string in, std::string target){
 		}
 		
 		ret.push_back(occ);
+		occ++;
 	}
 	
 }
