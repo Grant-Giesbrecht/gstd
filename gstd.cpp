@@ -53,54 +53,21 @@ string to_lower(std::string s){
  input - string to parse
  delin - deliniating characters (these are deleted from the returned words)
  keep_delin - characters that will always be recognized as words, will not be removed, and will always be lone
+ preserve_strings - does not parse at deliminators that occur inside strings (inside pairs of double quotes)
  
  Returns a vector of parsed strings
  */
-vector<string> parse(string input, string delin, string keep_delin){
+vector<string> parse(string input, string delin, string keep_delin, bool preserve_strings){
     
     vector<string> output;
-    
-    int len_counter = 0; //Number of elements in the deliated section
-    for (size_t i = 0; i < input.length() ; i++){
-        
-        if ((delin.find(input[i]) != string::npos)){ //Deliniator found
-            
-            //Add block to output if section exists (not two deliniators in a row)
-            if (len_counter > 0){
-                output.push_back(input.substr(i-len_counter , len_counter));
-            }
-            
-            //Reset length counter
-            len_counter = 0;
-            
-        }else if ((keep_delin.find(input[i]) != string::npos)){ //Keep-deliniator found
-        
-            //Add block to output
-            if (len_counter > 0){
-                output.push_back(input.substr(i-len_counter , len_counter));
-            }
-        
-            //Reset length counter
-            len_counter = 0;
-            
-            output.push_back(string(1, input[i]));
-            
-        }else if(i+1 == input.length()){ //Handle end conditions
-            len_counter++;
-            
-            if (input.substr(i-len_counter+1 , len_counter).length() > 0){
-                output.push_back(input.substr(i-len_counter+1 , len_counter));
-            }
-            
-        }else{
-            
-            //Increment length counter
-            len_counter++;
-            
-        }
-    }
-    
-    return output;
+	
+	vector<string_idx> output_idx = parseIdx(input, delin, keep_delin, preserve_strings);
+	
+	for (size_t i = 0 ; i < output_idx ; i++){
+		output.push_back(output_idx.str);
+	}
+	
+	return output;
 }
 
 /*
@@ -109,18 +76,62 @@ vector<string> parse(string input, string delin, string keep_delin){
  
  input - string to parse
  delin - deliniating characters
+ preserve_strings - does not parse at deliminators that occur inside strings (inside pairs of double quotes)
  
  Returns a vector of parsed strings along with the index of the first character of the substring in
  the original string.
  */
-vector<string_idx> parseIdx(string input, string delin, string keep_delin){
+vector<string_idx> parseIdx(string input, string delin, string keep_delin, bool preserve_strings){
     
     vector<string_idx> output;
-    
+	
+	//Find out indeces covered by strings
+	
+	//Find quotes and escapes
+	std::vector<size_t> quotes = all_occurances(input, "\"");
+	std::vector<size_t> escapes = all_occurances(input, "\\");
+	
+	//Remove escaped quotes
+	for (size_t i = 0 ; i < escapes.size() ; i++){
+		for (size_t j = 0 ; j < quotes.size() ; j++){
+			if (escapes[i]+1 == quotes[j]){ //If the escape is immadiately before a quote, remove the quote (it is escaped)
+				quotes.erase(quotes.begin()+j);
+				j--;
+			}
+		}
+	}
+	
+    //Now we know what characters are in a string, resume traditional parsing and ignore those in quotes
+	
     int len_counter = 0; //Number of elements in the deliated section
     for (size_t i = 0; i < input.length() ; i++){
         
-        if ((delin.find(input[i]) != string::npos)){ //Deliniator found
+		bool skip_check = false;
+		
+		//Check if in quote and need to skip delim check
+		if (preserve_strings){
+			for (size_t q = 0 ; q < quotes.size() ; q += 2 ){ //For each pair of quotes, check if 'i' is inside
+				
+				if (q+1 >= quotes.size()){ //If uneven number of quotes and close quote not avail, do this....
+					if (i >= quotes[q]){ //If after open quote, skip delim check
+						skip_check = true;
+						break;
+					}
+				}else{ //Otherwise...
+					if (i >= quotes[q] &&  i <= quotes[q+1]){ //If inside a pair of quotes...
+						skip_check = true; //Skip the delim check
+						break;
+					}
+				}
+				
+				
+			}
+		}
+		
+		size_t delin_pos = delin.find(input[i]);
+		size_t kdelin_pos = keep_delin.find(input[i]);
+		
+        if ((delin != string::npos) && !skip_check){ //Deliniator found
             
             //Add block to output if section exists (not two deliniators in a row)
             if (len_counter > 0){
@@ -135,7 +146,7 @@ vector<string_idx> parseIdx(string input, string delin, string keep_delin){
             //Reset length counter
             len_counter = 0;
             
-        }else if ((keep_delin.find(input[i]) != string::npos)){ //Keep-deliniator found
+        }else if ((kdelin != string::npos) && !skip_check){ //Keep-deliniator found
         
             //Add block to output
             if (len_counter > 0){
@@ -464,6 +475,32 @@ std::string to_gstring(double x, size_t buf_size, size_t precision){
 	sprintf(buffer, format.c_str(), x);
 
 	return std::string(buffer);
+}
+
+/*
+ Finds occurances of 'target' in 'in' according to string.find(), but finds every
+ such occurance an returns in a vector.
+ 
+ in - string to search
+ target - target string to search for
+ 
+ returns vector of size_t indexes of occurances of target in 'in'.
+ */
+std::vector<size_t> all_occurances(std::string in, std::string target){
+	
+	std::vector<size_t> ret;
+	
+	size_t occ = 0;
+	while (true){
+		occ = in.find(target, occ);
+		
+		if (occ == std::string::npos){
+			return ret;
+		}
+		
+		ret.push_back(occ);
+	}
+	
 }
 
 }
