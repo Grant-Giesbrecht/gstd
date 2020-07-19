@@ -18,6 +18,9 @@ typedef struct{
 bool to_bool(std::string bstr);
 std::string bool_to_str(bool b);
 
+std::vector<bool> int_to_bin(int x, int num_bits=8);
+std::string bin_to_str(std::vector<bool> x, int pad_to_bits=8, bool LSB_right = true);
+
 std::string to_upper(std::string s);
 std::string to_lower(std::string s);
 

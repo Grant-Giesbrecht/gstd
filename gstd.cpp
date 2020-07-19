@@ -4,6 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <iostream>
+#include <cmath>
+#include <ctgmath>
 
 using namespace std;
 namespace gstd {
@@ -36,6 +38,93 @@ std::string bool_to_str(bool b){
 	}else{
 		return "False";
 	}
+}
+
+/*
+Accepts an integer, returns a vector of booleans representing it in binary. A
+value of true represents a 1, false a zero. Index zero is LSB, index 'n' MSB.
+ 
+ num_bits specifies how many bits to display in return value. If this number is
+ too small to fit all requisite bits or it is -1, it will automatically be set
+ to the smallest possible size.
+*/
+std::vector<bool> int_to_bin(int x, int num_bits){
+
+	//Make sure x is positive
+	if (x < 0) x = abs(x);
+
+	//Check that enoguh bits are given
+	int num_reqd;
+	if (x != 0){
+		num_reqd = ceil(log10(x)/log10(2));
+	}else{
+		num_reqd = 1;
+	}
+	
+	if (num_bits == -1 || num_reqd > num_bits){
+		num_bits = num_reqd;
+	}
+	
+	std::vector<bool> bin;
+	bin.reserve(num_bits);
+	for (size_t i = 0 ; i < 8 ; i++){
+		bin.push_back(false);
+	}
+
+	int remainder = x;
+	
+	for (int i = num_bits-1 ; i >= 0 ; i-- ){
+		if (remainder - round(pow(2, i)) >= 0){
+			remainder -= round(pow(2, i));
+			bin[i] = true;
+		}
+	}
+
+	return bin;
+}
+
+/*
+ Accepts a vector of bools representing bits in a binary number. Returns
+ a string after converting them to 1s for true and 0s for false and
+ concatenating them together.
+ 
+ 'pad_to_bits' allows you to add padding to ensure returned string is
+ at least 'pad_to_bits' long.
+ 
+ 'LSB_right' sets whether or not the LSB appears on the right or left of
+ the returned string.
+ */
+string bin_to_str(std::vector<bool> x, int pad_to_bits, bool LSB_right){
+
+	string out;
+
+	if (!LSB_right){
+		for (size_t i = 0 ; i < x.size() ; i++){
+			if (x[i]){
+				out = out + "1";
+			}else{
+				out = out + "0";
+			}
+		}
+
+		for (size_t i = out.length() ; i < pad_to_bits ; i++){
+			out = out + "0";
+		}
+	}else{
+		for (size_t i = 0 ; i < x.size() ; i++){
+			if (x[i]){
+				out = "1"+out;
+			}else{
+				out = "0"+out;
+			}
+		}
+
+		for (size_t i = out.length() ; i < pad_to_bits ; i++){
+			out = "0"+out;
+		}
+	}
+
+	return out;
 }
 
 /*
