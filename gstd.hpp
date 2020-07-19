@@ -16,6 +16,7 @@ typedef struct{
 }string_idx;
 
 bool to_bool(std::string bstr);
+std::string bool_to_str(bool b);
 
 std::string to_upper(std::string s);
 std::string to_lower(std::string s);

@@ -14,6 +14,7 @@ namespace gstd {
  */
 bool to_bool(std::string bstr){
     
+	std::string orig = bstr;
     bstr = to_upper(bstr);
     
     if (bstr == "T" || bstr == "TRUE" || bstr == "1"){
@@ -21,9 +22,20 @@ bool to_bool(std::string bstr){
     }else if(bstr == "F" || bstr == "FALSE" || bstr == "0"){
         return false;
     }else{
-        throw invalid_argument("Failed to convert string to boolean. Must be T/F, True/False, 1/0.");
+        throw invalid_argument("Failed to convert string '" + orig + "' to boolean. Must be T/F, True/False, 1/0.");
     }
     
+}
+
+/*
+ Converts a boolean to a string.
+ */
+std::string bool_to_str(bool b){
+	if (b){
+		return "True";
+	}else{
+		return "False";
+	}
 }
 
 /*
@@ -232,12 +244,15 @@ void trim_whitespace(string& in){
  Looks for a string in 'in'. Starts the search at 'start' and saves the
  first character after the found string in 'end'. The string it searches
  for is defined by being enclosed in double quotes. Double quotes escaped
- by a backslash will not mark the end of a string.
+ by a backslash will not mark the end of a string, instead the backslash
+ is removed.
  
  If no string is found, 'end' is set equal to zero.
  */
 std::string get_string(std::string in, size_t& end, size_t start){
     
+	std::string input = in;
+	
     end = 0;
     
     bool was_backslash = false;
@@ -246,25 +261,25 @@ std::string get_string(std::string in, size_t& end, size_t start){
     
     //Set was_backslash correctly if 'start' is not zero
     if (start != 0){
-        was_backslash = (in[start-1] == '\\');
+        was_backslash = (input[start-1] == '\\');
     }
     
-    for (size_t i = start ; i < in.length() ; i++){ //Scan through each character...
-        
-        if (in[i] == '"'){
+    for (size_t i = start ; i < input.length() ; i++){ //Scan through each character...
+        if (input[i] == '"'){
             if (was_backslash){
-                //do nothing - escaped
+				input = input.substr(0, i-1)+input.substr(i); //escaped - combine backslash and doublequotes
+				i--;
                 was_backslash = false;
             }else{
                 if (in_string){ //found end
                     end = i+1; //Set end correctly
-                    return in.substr(start_char, end-start_char-1); //Return interior
+                    return input.substr(start_char, end-start_char-1); //Return interior
                 }else{ //found start
                     in_string = true;
                     start_char  = i+1; //Next char is where string inside begins
                 }
             }
-        }else if (in[i] == '\\'){
+        }else if (input[i] == '\\'){
             was_backslash = !was_backslash; //two backslashes are a backslash char, not an escape char
         }else if (was_backslash){
             was_backslash = false;
