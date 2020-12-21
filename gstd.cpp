@@ -620,7 +620,7 @@ size_t findAndReplace(std::string& line, std::string search, std::string repl){
 	while (pos != std::string::npos){
 		numOccurances++;
 		line = line.replace(pos, search.length(), repl);
-		pos = line.find(search);
+		pos = line.find(search, pos+repl.length());
 	}
 
 	return numOccurances;
