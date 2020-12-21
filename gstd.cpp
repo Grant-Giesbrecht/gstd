@@ -608,4 +608,22 @@ std::vector<size_t> all_occurances(std::string in, std::string target){
 
 }
 
+/*
+Finds each occurance of the string 'search' in 'line' and replaces it with
+'repl'. Returns the number of occurances replaced.
+*/
+size_t findAndReplace(std::string& line, std::string search, std::string repl){
+
+	size_t numOccurances = 0;
+
+	std::size_t pos = line.find(search);
+	while (pos != std::string::npos){
+		numOccurances++;
+		line = line.replace(pos, search.length(), repl);
+		pos = line.find(search);
+	}
+
+	return numOccurances;
+}
+
 }

@@ -42,6 +42,7 @@ std::vector<std::vector<bool> > to_bvec2D(std::string in);
 std::string to_gstring(double x, size_t buf_size=30, size_t precision=6);
 
 std::vector<size_t> all_occurances(std::string in, std::string target);
+size_t findAndReplace(std::string& line, std::string search, std::string repl);
 
 /*
 Checks if the specified value 'val' is included in the vector 'vec'. Returns
