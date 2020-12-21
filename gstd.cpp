@@ -30,12 +30,24 @@ bool to_bool(std::string bstr){
 }
 
 /*
- Converts a boolean to a string.
+ Converts a boolean 'b' to a string. The format specifies the capitalization.
+
+ format options:
+ 	'l', 'L' - all lowercase
+	'f', 'F' - Capitalizes only first character
+	'u', 'U' - all uppercase
+
+
+
  */
-std::string bool_to_str(bool b){
+std::string bool_to_str(bool b, char format){
 	if (b){
+		if (format == 'l' || format == 'L') return "true";
+		if (format == 'u' || format == 'U') return "TRUE";
 		return "True";
 	}else{
+		if (format == 'l' || format == 'L') return "false";
+		if (format == 'u' || format == 'U') return "FALSE";
 		return "False";
 	}
 }
