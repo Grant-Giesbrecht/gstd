@@ -43,6 +43,15 @@ std::string to_gstring(double x, size_t buf_size=30, size_t precision=6);
 
 std::vector<size_t> all_occurances(std::string in, std::string target);
 
+/*
+Checks if the specified value 'val' is included in the vector 'vec'. Returns
+true if so, else false.
+*/
+template<typename T>
+bool inVector(T val, std::vector<T> vec){
+	return (std::find(vec.begin(), vec.end(), val) != vec.end());
+}
+
 }
 
 #endif
