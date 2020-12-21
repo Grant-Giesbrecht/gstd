@@ -327,6 +327,7 @@ void ensure_whitespace(string& in, string targets){
  */
 void trim_whitespace(string& in){
     in = std::regex_replace(in, std::regex("^ +| +$|( ) +"), "$1");
+	in = std::regex_replace(in, std::regex("^\t+|\t+$|(\t)\t+"), "$1");
 }
 
 /*
