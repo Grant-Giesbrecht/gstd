@@ -16,7 +16,7 @@ all: gstd.cpp
 	$(CC) -o libgstd.a -c gstd.cpp
 
 all_linux: gstd.cpp
-	$(CC_LINUX) -o libstd.a -c gstd.cpp
+	$(CC_LINUX) -o libgstd.a -c gstd.cpp -std=c++11
 
 install: all
 	cp *.hpp $(DIR_INCLUDE)
@@ -24,4 +24,4 @@ install: all
 
 install_linux: all_linux
 	cp *.hpp $(DIR_INCLUDE)
-	cp $(ARCHIVE_FILE) $(DIR_LIB)  
+	cp $(ARCHIVE_FILE) $(DIR_LIB)
