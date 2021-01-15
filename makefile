@@ -1,8 +1,12 @@
-CC_LINUX = g++
-CC = clang++
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+	CC = clang++ -std=c++11
+else
+	CC = g++ -std=c++11
+endif
 
 #Where hpp file is saved
-DIR_INCLUDE = /usr/local/include
+DIR_INCLUDE = /usr/local/include/gstd
 
 #Where lib is saved
 DIR_LIB = /usr/local/lib/
@@ -15,13 +19,8 @@ ARCHIVE_FILE = libgstd.a
 all: gstd.cpp
 	$(CC) -o libgstd.a -c gstd.cpp
 
-all_linux: gstd.cpp
-	$(CC_LINUX) -o libgstd.a -c gstd.cpp -std=c++11
-
 install: all
-	cp *.hpp $(DIR_INCLUDE)
-	cp $(ARCHIVE_FILE) $(DIR_LIB)
-
-install_linux: all_linux
+	mkdir -p $(DIR_INCLUDE)
+	mkdir -p $(DIR_LIB)
 	cp *.hpp $(DIR_INCLUDE)
 	cp $(ARCHIVE_FILE) $(DIR_LIB)
