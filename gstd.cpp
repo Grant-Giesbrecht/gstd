@@ -506,7 +506,6 @@ std::vector<std::string> to_svec(std::string in){
         stemp = gstd::get_string(in, idx, idx);
         if (idx != 0){
 	        vec.push_back(stemp);
-			cout << "\t\t" << to_string(idx) << endl;
         }
     }while(idx != 0);
 
