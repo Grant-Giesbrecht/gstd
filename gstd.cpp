@@ -504,10 +504,11 @@ std::vector<std::string> to_svec(std::string in){
 
     do{
         stemp = gstd::get_string(in, idx, idx);
-        if (stemp != ""){
-            vec.push_back(stemp);
+        if (idx != 0){
+	        vec.push_back(stemp);
+			cout << "\t\t" << to_string(idx) << endl;
         }
-    }while(idx < in.length());
+    }while(idx != 0);
 
     return vec;
 
