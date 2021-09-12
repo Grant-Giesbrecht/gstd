@@ -521,10 +521,10 @@ std::vector<std::string> to_svec(std::string in){
 
     do{
         stemp = gstd::get_string(in, idx, idx);
-        if (stemp != ""){
-            vec.push_back(stemp);
+        if (idx != 0){
+	        vec.push_back(stemp);
         }
-    }while(idx < in.length());
+    }while(idx != 0);
 
     return vec;
 
