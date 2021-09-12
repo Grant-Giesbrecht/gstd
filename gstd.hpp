@@ -29,6 +29,7 @@ std::vector<string_idx> parseIdx(std::string input, std::string delin, std::stri
 
 void ensure_whitespace(std::string& in, std::string targets);
 void trim_whitespace(std::string& in);
+void trim_end_comment(std::string& in, std::string comment_spec);
 
 std::string get_string(std::string in, size_t& end, size_t start=0);
 

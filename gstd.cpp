@@ -343,6 +343,23 @@ void trim_whitespace(string& in){
 }
 
 /*
+Trims comments off the end of a line, as specified by 'comment_spec' but WILL
+count commnet_specs that are contained within single or double quotes.
+*/
+void trim_end_comment(std::string& in, std::string comment_spec){
+
+	// Find comment_spec occurance (find first occurance)
+	size_t idx = in.find(comment_spec);
+
+	// Remove everything after comment
+	if (idx != std::string::npos){
+		in = in.substr(0, idx);
+	}
+
+
+}
+
+/*
  Looks for a string in 'in'. Starts the search at 'start' and saves the
  first character after the found string in 'end'. The string it searches
  for is defined by being enclosed in double quotes. Double quotes escaped
