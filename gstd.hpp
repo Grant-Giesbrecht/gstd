@@ -46,6 +46,8 @@ std::string to_gstring(double x, size_t buf_size=30, size_t precision=6);
 std::vector<size_t> all_occurances(std::string in, std::string target);
 size_t findAndReplace(std::string& line, std::string search, std::string repl);
 
+signed long int fstoi(std::string val);
+
 /*
 Checks if the specified value 'val' is included in the vector 'vec'. Returns
 true if so, else false.

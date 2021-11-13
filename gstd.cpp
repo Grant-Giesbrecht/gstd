@@ -656,4 +656,50 @@ size_t findAndReplace(std::string& line, std::string search, std::string repl){
 	return numOccurances;
 }
 
+/* Conerts a string in decimal, hex or binary format to a signed long integer
+
+*/
+signed long int fstoi(std::string val){
+
+	int mode; //0 = dec, 1 = hex, 2 = bin
+
+	// Determine format mode
+	if (val.length() < 2){
+		mode = 0;
+	}else if(val[0] != '0'){
+		mode = 0;
+	}else if(val[1] == 'x'){
+		mode = 1;
+	}else if(val[1] == 'b'){
+		mode = 2;
+	}else{
+		mode = 0;
+	}
+
+	stringstream ss;
+	signed long int rv;
+
+	switch(mode){
+		case(0):
+			rv = stoi(val);
+			break;
+		case(1):
+			val  = val.substr(2);
+			ss << std::hex << val << endl;
+			ss >> rv;
+			break;
+		case(2):
+			char * cstr = new char [val.length()+1];
+			std::strcpy (cstr, val.c_str());
+			char * pEnd;
+			unsigned long long int ulli;
+			ulli = strtoull(cstr+2, &pEnd, 2);
+			rv = ulli;
+			break;
+	}
+
+	return rv;
+
+}
+
 }
