@@ -20,7 +20,7 @@ const std::string red("\033[31m");
 const std::string redBg("\033[41m");
 const std::string green("\033[32m");
 const std::string greenBg("\033[42m");
-const std::string yellow("\033[m33");
+const std::string yellow("\033[33m");
 const std::string yellowBg("\033[m43");
 const std::string blue("\033[34m");
 const std::string blueBg("\033[44m");
