@@ -661,7 +661,7 @@ size_t findAndReplace(std::string& line, std::string search, std::string repl){
 Checks if a string is a valid decimal literal, as defined by what stod can
 process.
 */
-bool ishex(std::string x){
+bool isdec(std::string x){
 	try{
 		double y = stod(x);
 	}catch(...){
