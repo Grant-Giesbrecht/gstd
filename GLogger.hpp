@@ -22,9 +22,13 @@ public:
 
 	void debug(std::string logtxt);
 	void info(std::string logtxt);
-	void msg(std::string logtxt);
+	void msg(std::string logtxt, bool printNow=false);
 	void warning(std::string logtxt, bool printNow=false);
 	void error(std::string logtxt, bool printNow=false);
+
+	void lmsg(std::string logtxt, size_t lnum, bool printNow=false);
+	void lwarning(std::string logtxt, size_t lnum, bool printNow=false);
+	void lerror(std::string logtxt, size_t lnum, bool printNow=false);
 
 	void critical(std::string logtxt);
 
@@ -57,15 +61,35 @@ void GLogger::debug(std::string logtxt){
 
 }
 
+void GLogger::setLevel(int lvl){
+	level = lvl;
+}
+
 void GLogger::info(std::string logtxt){
 
 	infos.push_back(logtxt);
 
 }
 
-void GLogger::msg(std::string logtxt){
+void GLogger::msg(std::string logtxt, bool printNow){
 
 	messages.push_back(logtxt);
+
+	if (printNow){
+		std::cout << "\t" + gstd::gcolor::blue + logtxt + gstd::gcolor::normal << std::endl;
+	}
+
+}
+
+void GLogger::lmsg(std::string logtxt, size_t lnum, bool printNow){
+
+	logtxt = "[Line: " + to_string(lnum) + "] ";
+
+	messages.push_back(logtxt);
+
+	if (printNow){
+		std::cout << "\t" + gstd::gcolor::blue + logtxt + gstd::gcolor::normal << std::endl;
+	}
 
 }
 
@@ -78,7 +102,29 @@ void GLogger::warning(std::string logtxt, bool printNow){
 	}
 }
 
+void GLogger::lwarning(std::string logtxt, size_t lnum, bool printNow){
+
+	logtxt = "[Line: " + to_string(lnum) + "] ";
+
+	warnings.push_back(logtxt);
+
+	if (printNow){
+		std::cout << gstd::gcolor::yellow << "WARNING: " << logtxt << gstd::gcolor::normal << std::endl;
+	}
+}
+
 void GLogger::error(std::string logtxt, bool printNow){
+
+	errors.push_back(logtxt);
+
+	if (printNow){
+		std::cout << gstd::gcolor::red << "ERROR: " << logtxt << gstd::gcolor::normal << std::endl;
+	}
+}
+
+void GLogger::lerror(std::string logtxt, size_t lnum, bool printNow){
+
+	logtxt = "[Line: " + to_string(lnum) + "] ";
 
 	errors.push_back(logtxt);
 
