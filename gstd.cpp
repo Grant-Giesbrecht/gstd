@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <ctgmath>
+#include <stdexcept>
 
 using namespace std;
 namespace gstd {
@@ -656,6 +657,44 @@ size_t findAndReplace(std::string& line, std::string search, std::string repl){
 	return numOccurances;
 }
 
+/*
+Checks if a string is a valid hex literal
+*/
+bool ishex(std::string x){
+
+	// Requires length of 3 minimum
+	if (x.length() < 3) return false;
+
+	// Requires prefix '0x' or '0X'
+	if (x[0] != '0' || (x[0] != 'x' && x[0] != 'X')) return false;
+
+	// Requires all others to be members of 'isxdigit'
+	for ( int i = 2 ; i < x.length() ; i++){
+		if (!isxdigit(x[i])) return false;
+	}
+
+	return true;
+}
+
+/*
+Checks if a string is a valid binary literal
+*/
+bool isbin(std::string x){
+
+	// Requires length of 3 minimum
+	if (x.length() < 3) return false;
+
+	// Requires prefix '0b' or '0B'
+	if (x[0] != '0' || (x[0] != 'b' && x[0] != 'B')) return false;
+
+	// Requires all others to be members of 'isxdigit'
+	for ( int i = 2 ; i < x.length() ; i++){
+		if (x[i] != '0' && x[i] != '1') return false;
+	}
+
+	return true;
+}
+
 /* Conerts a string in decimal, hex or binary format to a signed long integer
 
 */
@@ -670,8 +709,14 @@ signed long int fstoi(std::string val){
 		mode = 0;
 	}else if(val[1] == 'x'){
 		mode = 1;
+		if (!ishex(val)){
+			throw std::invalid_argument("Invalid hex literal");
+		}
 	}else if(val[1] == 'b'){
 		mode = 2;
+		if (!isbin(val)){
+			throw std::invalid_argument("Invalid binary literal");
+		}
 	}else{
 		mode = 0;
 	}

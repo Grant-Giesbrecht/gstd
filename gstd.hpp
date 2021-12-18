@@ -46,6 +46,9 @@ std::string to_gstring(double x, size_t buf_size=30, size_t precision=6);
 std::vector<size_t> all_occurances(std::string in, std::string target);
 size_t findAndReplace(std::string& line, std::string search, std::string repl);
 
+bool ishex(std::string x);
+bool isbin(std::string x);
+
 signed long int fstoi(std::string val);
 
 /*
