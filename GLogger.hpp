@@ -83,7 +83,7 @@ void GLogger::msg(std::string logtxt, bool printNow){
 
 void GLogger::lmsg(std::string logtxt, size_t lnum, bool printNow){
 
-	logtxt = "[Line: " + std::to_string(lnum) + "] ";
+	logtxt = "[Line: " + std::to_string(lnum) + "] " + logtxt;
 
 	messages.push_back(logtxt);
 
@@ -104,7 +104,7 @@ void GLogger::warning(std::string logtxt, bool printNow){
 
 void GLogger::lwarning(std::string logtxt, size_t lnum, bool printNow){
 
-	logtxt = "[Line: " + std::to_string(lnum) + "] ";
+	logtxt = "[Line: " + std::to_string(lnum) + "] " + logtxt;
 
 	warnings.push_back(logtxt);
 
@@ -124,7 +124,7 @@ void GLogger::error(std::string logtxt, bool printNow){
 
 void GLogger::lerror(std::string logtxt, size_t lnum, bool printNow){
 
-	logtxt = "[Line: " + std::to_string(lnum) + "] ";
+	logtxt = "[Line: " + std::to_string(lnum) + "] " + logtxt;
 
 	errors.push_back(logtxt);
 
