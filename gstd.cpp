@@ -680,7 +680,7 @@ bool ishex(std::string x){
 	if (x.length() < 3) return false;
 
 	// Requires prefix '0x' or '0X'
-	if (x[0] != '0' || (x[0] != 'x' && x[0] != 'X')) return false;
+	if (x[0] != '0' || (x[1] != 'x' && x[1] != 'X')) return false;
 
 	// Requires all others to be members of 'isxdigit'
 	for ( int i = 2 ; i < x.length() ; i++){
@@ -699,7 +699,7 @@ bool isbin(std::string x){
 	if (x.length() < 3) return false;
 
 	// Requires prefix '0b' or '0B'
-	if (x[0] != '0' || (x[0] != 'b' && x[0] != 'B')) return false;
+	if (x[0] != '0' || (x[1] != 'b' && x[1] != 'B')) return false;
 
 	// Requires all others to be members of 'isxdigit'
 	for ( int i = 2 ; i < x.length() ; i++){
